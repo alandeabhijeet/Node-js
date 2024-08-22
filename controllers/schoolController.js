@@ -1,4 +1,4 @@
-const db = require('../config/db');
+const pool = require('../config/db');
 const haversine = require('haversine-distance');
 const validateInput = require('../utils/validation');
 
@@ -13,7 +13,7 @@ exports.addSchool = (req, res) => {
     const query = 'INSERT INTO schools (name, address, latitude, longitude) VALUES (?, ?, ?, ?)';
     const values = [name, address, latitude, longitude];
 
-    db.query(query, values, (err, result) => {
+    pool.query(query, values, (err, result) => {
         if (err) {
             console.error('Error inserting data:', err);
             return res.status(500).json({ error: 'Database error', details: err.message });
@@ -30,7 +30,7 @@ exports.listSchools = (req, res) => {
         return res.status(400).json({ error: 'Invalid latitude or longitude' });
     }
 
-    db.query('SELECT * FROM schools', (err, results) => {
+    pool.query('SELECT * FROM schools', (err, results) => {
         if (err) return res.status(500).json({ error: 'Database error', details: err.message });
 
         const sortedSchools = results
